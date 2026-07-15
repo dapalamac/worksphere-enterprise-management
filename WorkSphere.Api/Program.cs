@@ -1,4 +1,15 @@
+using Microsoft.EntityFrameworkCore;
+using WorkSphere.Infrastructure.Persistence;
+using WorkSphere.Infrastructure;
+
+
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddControllers();
+
+builder.Services.AddInfrastructure(builder.Configuration);
+
+builder.Services.AddOpenApi();
 
 // Add services to the container.
 

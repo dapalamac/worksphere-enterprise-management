@@ -23,4 +23,8 @@ public class Employee : BaseEntity
     public Guid DepartmentId { get; set; }
 
     public Guid PositionId { get; set; }
+
+    public Department Department { get; set; } = null!;
+
+    public Position Position { get; set; } = null!;
 }
