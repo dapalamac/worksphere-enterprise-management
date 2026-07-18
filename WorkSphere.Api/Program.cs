@@ -2,8 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using WorkSphere.Infrastructure.Persistence;
 using WorkSphere.Infrastructure;
 
-
-
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
@@ -11,11 +9,9 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddOpenApi();
 
-// Add services to the container.
+builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -31,4 +27,10 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.UseSwagger();
+
+app.UseSwaggerUI();
+
 app.Run();
+
+
