@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using WorkSphere.Application.DTOs.Department;
-using WorkSphere.Application.DTOs.Position;
 
 namespace WorkSphere.Application.DTOs.Employees;
-
-public class EmployeeResponse
+public class UpdateEmployeeRequest
 {
-    public Guid Id { get; set; }
-
     public string FirstName { get; set; } = string.Empty;
 
     public string LastName { get; set; } = string.Empty;
@@ -24,7 +19,7 @@ public class EmployeeResponse
 
     public decimal Salary { get; set; }
 
-    public DepartmentResponse? Department { get; set; } = new();
+    public Guid DepartmentId { get; set; }
 
-    public PositionResponse? Position { get; set; } = new();
+    public Guid PositionId { get; set; }
 }

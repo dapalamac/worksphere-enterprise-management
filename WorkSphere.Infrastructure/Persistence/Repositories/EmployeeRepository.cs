@@ -16,12 +16,18 @@ public class EmployeeRepository : IEmployeeRepository
 
     public async Task<List<Employee>> GetAllAsync()
     {
-        return await _context.Employees.ToListAsync();
+        return await _context.Employees
+            .Include(e => e.Department)
+            .Include(e => e.Position)
+            .ToListAsync();
     }
 
     public async Task<Employee?> GetByIdAsync(Guid id)
     {
-        return await _context.Employees.FindAsync(id);
+        return await _context.Employees
+            .Include(e => e.Department)
+            .Include(e => e.Position)
+            .FirstOrDefaultAsync(e => e.Id == id);
     }
 
     public async Task AddAsync(Employee employee)
@@ -41,4 +47,6 @@ public class EmployeeRepository : IEmployeeRepository
         _context.Employees.Remove(employee);
         await _context.SaveChangesAsync();
     }
+
+
 }
