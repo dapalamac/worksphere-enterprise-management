@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WorkSphere.Application.DTOs.Department;
 using WorkSphere.Application.DTOs.Position;
 using WorkSphere.Application.Interfaces;
-using WorkSphere.Domain.Entities;
 
 namespace WorkSphere.Api.Controllers;
 
@@ -12,24 +10,17 @@ namespace WorkSphere.Api.Controllers;
 public class PositionController : ControllerBase
 {
 
-    private readonly IPositionRepository _positionRepository;
+    private readonly IPositionService _positionService;
 
-    public PositionController(IPositionRepository positionRepository)
+    public PositionController(IPositionService positionService)
     {
-        _positionRepository = positionRepository;
+        _positionService = positionService;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var positions = await _positionRepository.GetAllAsync();
-
-        var response = positions.Select(position => new PositionResponse
-        {
-            Id = position.Id,
-            Name = position.Name,
-            Description = position.Description
-        });
+        var response = await _positionService.GetAllAsync();
 
         return Ok(response);
     }
@@ -38,21 +29,7 @@ public class PositionController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(CreatePositionRequest request)
     {
-        var position = new Position
-        {
-            Name = request.Name,
-            Description = request.Description,
-
-        };
-
-        await _positionRepository.AddAsync(position);
-
-        var response = new PositionResponse
-        {
-            Id = position.Id,
-            Name = position.Name,
-            Description = position.Description
-        };
+        var response = await _positionService.CreateAsync(request);
 
         return Ok(response);
     }
@@ -60,35 +37,34 @@ public class PositionController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(Guid id, UpdatePositionRequest request)
     {
-        var postion = await _positionRepository.GetByIdAsync(id);
+        var response = await _positionService.UpdateAsync(id, request);
 
-        if (postion == null)
+        if (response == null)
             return NotFound();
-
-        postion.Name = request.Name;
-        postion.Description = request.Description;
-
-        await _positionRepository.UpdateAsync(postion);
-
-        var response = new PositionResponse
-        {
-            Id = postion.Id,
-            Name = postion.Name,
-            Description = postion.Description
-        };
 
         return Ok(response);
     }
 
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(Guid id)
+    {
+        var response = await _positionService.GetByIdAsync(id);
+
+        if (response == null)
+            return NotFound();
+
+        return Ok(response);
+    }
+
+
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)
     {
-        var department = await _positionRepository.GetByIdAsync(id);
+        var delete = await _positionService.DeleteAsync(id);
 
-        if (department == null)
+        if (!delete)
             return NotFound();
-
-        await _positionRepository.DeleteAsync(department);
 
         return NoContent();
     }

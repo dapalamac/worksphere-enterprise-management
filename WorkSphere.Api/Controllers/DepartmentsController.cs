@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WorkSphere.Application.DTOs.Department;
 using WorkSphere.Application.DTOs.Employees;
+using WorkSphere.Application.DTOs.Position;
 using WorkSphere.Application.Interfaces;
+using WorkSphere.Application.Services.Departments;
 using WorkSphere.Domain.Entities;
 using WorkSphere.Infrastructure.Persistence.Repositories;
 
@@ -13,25 +15,18 @@ namespace WorkSphere.Api.Controllers;
 public class DepartmentController : ControllerBase
 {
 
-    private readonly IDepartmentRepository _departmentRepository;
+    private readonly IDepartmentService _departmentService;
 
-    public DepartmentController(IDepartmentRepository DepartmentRepository)
+    public DepartmentController(IDepartmentService departmentService)
     {
-        _departmentRepository = DepartmentRepository;
+        _departmentService = departmentService;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var departments = await _departmentRepository.GetAllAsync();
-
-        var response = departments.Select(department => new DepartmentResponse
-        {
-            Id = department.Id,
-            Name = department.Name,
-            Description = department.Description
-        });
-
+        var response = await _departmentService.GetAllAsync();
+ 
         return Ok(response);
     }
 
@@ -39,44 +34,31 @@ public class DepartmentController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(CreateDepartmentRequest request)
     {
-        var department = new Department
-        {
-            Name = request.Name,
-            Description = request.Description,
-           
-        };
-
-        await _departmentRepository.AddAsync(department);
-
-        var response = new DepartmentResponse
-        {
-            Id = department.Id,
-            Name = department.Name,
-            Description = department.Description
-        };
+        var response = await _departmentService.CreateAsync(request);
 
         return Ok(response);
     }
 
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(Guid id)
+    {
+        var response = await _departmentService.GetByIdAsync(id);
+
+        if (response == null)
+            return NotFound();
+
+        return Ok(response);
+    }
+
+
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(Guid id, UpdateDepartmentRequest request)
     {
-        var department = await _departmentRepository.GetByIdAsync(id);
+        var response = await _departmentService.UpdateAsync(id, request);
 
-        if (department == null)
+        if (response == null)
             return NotFound();
-
-        department.Name = request.Name;
-        department.Description = request.Description;
-
-        await _departmentRepository.UpdateAsync(department);
-
-        var response = new DepartmentResponse
-        {
-            Id = department.Id,
-            Name = department.Name,
-            Description = department.Description
-        };
 
         return Ok(response);
     }
@@ -84,15 +66,15 @@ public class DepartmentController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)
     {
-        var department = await _departmentRepository.GetByIdAsync(id);
+        var deleted = await _departmentService.DeleteAsync(id);
 
-        if (department == null)
+        if (!deleted)
             return NotFound();
-
-        await _departmentRepository.DeleteAsync(department);
 
         return NoContent();
     }
+
+    
 
 
 }
