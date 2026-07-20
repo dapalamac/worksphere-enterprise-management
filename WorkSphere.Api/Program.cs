@@ -1,8 +1,26 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using Serilog;
 using WorkSphere.Api.Middlewares;
+using WorkSphere.Application.Validators.Employees;
 using WorkSphere.Infrastructure;
 
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.File(
+        "Logs/log-.txt",
+        rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog();
+
 builder.Services.AddControllers();
+
+builder.Services.AddFluentValidationAutoValidation();
+
+builder.Services.AddValidatorsFromAssemblyContaining<CreateEmployeeValidator>();
 
 builder.Services.AddInfrastructure(builder.Configuration);
 
