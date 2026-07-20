@@ -29,16 +29,14 @@ public class EmployeeService : IEmployeeService
         var department = await _departmentRepository.GetByIdAsync(request.DepartmentId);
 
         if (department == null)
-        {
             return null;
-        }
+
 
         var position = await _positionRepository.GetByIdAsync(request.PositionId);
 
         if (position == null)
-        {
             return null;
-        }
+
 
         var employee = new Employee
         {
@@ -51,36 +49,16 @@ public class EmployeeService : IEmployeeService
             Salary = request.Salary,
             DepartmentId = request.DepartmentId,
             PositionId = request.PositionId
+
         };
+
+        employee.Department = department;
+        employee.Position = position;
 
         await _employeeRepository.AddAsync(employee);
 
-        var response = new EmployeeResponse
-        {
-            Id = employee.Id,
-            FirstName = employee.FirstName,
-            LastName = employee.LastName,
-            Email = employee.Email,
-            Phone = employee.Phone,
-            BirthDate = employee.BirthDate,
-            HireDate = employee.HireDate,
-            Salary = employee.Salary,
-            Department = new DepartmentResponse
-            {
-                Id = department.Id,
-                Name = department.Name,
-                Description = department.Description
-            },
+        return MapToResponse(employee);
 
-            Position = new PositionResponse
-            {
-                Id = position.Id,
-                Name = position.Name,
-                Description = position.Description,
-            },
-        };
-
-        return response;
     }
 
     public async Task<bool> DeleteAsync(Guid id)
@@ -99,32 +77,7 @@ public class EmployeeService : IEmployeeService
     {
         var employees = await _employeeRepository.GetAllAsync();
 
-        var response = employees.Select(employee => new EmployeeResponse
-        {
-            Id = employee.Id,
-            FirstName = employee.FirstName,
-            LastName = employee.LastName,
-            Email = employee.Email,
-            Phone = employee.Phone,
-            BirthDate = employee.BirthDate,
-            HireDate = employee.HireDate,
-            Salary = employee.Salary,
-
-            Department = new DepartmentResponse
-            {
-                Id = employee.Department.Id,
-                Name = employee.Department.Name,
-                Description = employee.Department.Description
-            },
-
-            Position = new PositionResponse
-            {
-                Id = employee.Position.Id,
-                Name = employee.Position.Name,
-                Description = employee.Position.Description
-            }
-
-        }).ToList();
+        var response = employees.Select(MapToResponse).ToList();
 
         return response;
     }
@@ -133,39 +86,11 @@ public class EmployeeService : IEmployeeService
     {
         var employee = await _employeeRepository.GetByIdAsync(id);
 
-
         if (employee == null)
             return null;
 
+        return MapToResponse(employee);
 
-        var response = new EmployeeResponse
-        {
-            Id = employee.Id,
-            FirstName = employee.FirstName,
-            LastName = employee.LastName,
-            Email = employee.Email,
-            Phone = employee.Phone,
-            BirthDate = employee.BirthDate,
-            HireDate = employee.HireDate,
-            Salary = employee.Salary,
-
-            Department = new DepartmentResponse
-            {
-                Id = employee.Department.Id,
-                Name = employee.Department.Name,
-                Description = employee.Department.Description
-            },
-
-            Position = new PositionResponse
-            {
-                Id = employee.Position.Id,
-                Name = employee.Position.Name,
-                Description = employee.Position.Description
-            }
-
-        };
-
-        return response;
     }
 
     public async Task<EmployeeResponse?> UpdateAsync(Guid id, UpdateEmployeeRequest request)
@@ -195,11 +120,38 @@ public class EmployeeService : IEmployeeService
         employee.Salary = request.Salary;
         employee.DepartmentId = request.DepartmentId;
         employee.PositionId = request.PositionId;
-
+        employee.Department = department;
+        employee.Position = position;
 
         await _employeeRepository.UpdateAsync(employee);
 
-        var response = new EmployeeResponse
+        return MapToResponse(employee);
+
+    }
+
+    private static DepartmentResponse MapDepartment(Department department)
+    {
+        return new DepartmentResponse
+        {
+            Id = department.Id,
+            Name = department.Name,
+            Description = department.Description
+        };
+    }
+
+    private static PositionResponse MapPosition(Position position)
+    {
+        return new PositionResponse
+        {
+            Id = position.Id,
+            Name = position.Name,
+            Description = position.Description
+        };
+    }
+
+    private static EmployeeResponse MapToResponse(Employee employee)
+    {
+        return new EmployeeResponse
         {
             Id = employee.Id,
             FirstName = employee.FirstName,
@@ -210,21 +162,10 @@ public class EmployeeService : IEmployeeService
             HireDate = employee.HireDate,
             Salary = employee.Salary,
 
-            Department = new DepartmentResponse
-            {
-                Id = department.Id,
-                Name = department.Name,
-                Description = department.Description
-            },
 
-            Position = new PositionResponse
-            {
-                Id = position.Id,
-                Name = position.Name,
-                Description = position.Description
-            }
+            Department = MapDepartment(employee.Department),
+
+            Position = MapPosition(employee.Position)
         };
-
-        return response;
     }
 }

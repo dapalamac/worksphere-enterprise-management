@@ -25,12 +25,7 @@ public class DepartmentService : IDepartmentService
 
         await _departmentRepository.AddAsync(department);
 
-        return new DepartmentResponse
-        {
-            Id = department.Id,
-            Name = department.Name,
-            Description = department.Description
-        };
+        return MapToResponse(department);
     }
 
     public async Task<bool> DeleteAsync(Guid id)
@@ -42,19 +37,14 @@ public class DepartmentService : IDepartmentService
 
         await _departmentRepository.DeleteAsync(department);
 
-        return true; 
+        return true;
     }
 
     public async Task<List<DepartmentResponse>> GetAllAsync()
     {
         var departments = await _departmentRepository.GetAllAsync();
 
-        var response = departments.Select(department => new DepartmentResponse
-        {
-            Id = department.Id,
-            Name = department.Name,
-            Description = department.Description
-        }).ToList();
+        var response = departments.Select(MapToResponse).ToList();
 
         return response;
     }
@@ -66,12 +56,7 @@ public class DepartmentService : IDepartmentService
         if (department == null)
             return null;
 
-        return new DepartmentResponse
-        {
-            Id = department.Id,
-            Name = department.Name,
-            Description = department.Description,
-        };
+        return MapToResponse(department);
     }
 
     public async Task<DepartmentResponse?> UpdateAsync(Guid id, UpdateDepartmentRequest request)
@@ -86,6 +71,12 @@ public class DepartmentService : IDepartmentService
 
         await _departmentRepository.UpdateAsync(department);
 
+        return MapToResponse(department);
+    }
+
+
+    private static DepartmentResponse MapToResponse(Department department)
+    {
         return new DepartmentResponse
         {
             Id = department.Id,

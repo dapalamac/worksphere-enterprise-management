@@ -25,12 +25,7 @@ public class PositionService : IPositionService
 
         await _positionRepository.AddAsync(position);
 
-        return new PositionResponse
-        {
-            Id = position.Id,
-            Name = position.Name,
-            Description = position.Description
-        };
+        return MapToResponse(position);
 
     }
 
@@ -50,12 +45,7 @@ public class PositionService : IPositionService
     {
         var positions = await _positionRepository.GetAllAsync();
 
-        var response = positions.Select(position => new PositionResponse
-        {
-            Id = position.Id,
-            Name = position.Name,
-            Description = position.Description
-        }).ToList();
+        var response = positions.Select(MapToResponse).ToList();
 
         return response;
     }
@@ -67,12 +57,7 @@ public class PositionService : IPositionService
         if (position == null)
             return null;
 
-        return new PositionResponse
-        {
-            Id = position.Id,
-            Name = position.Name,
-            Description = position.Description,
-        };
+        return MapToResponse(position);
     }
 
 
@@ -88,12 +73,19 @@ public class PositionService : IPositionService
 
         await _positionRepository.UpdateAsync(position);
 
+        return MapToResponse(position);
+
+    }
+
+    private static PositionResponse MapToResponse(Position position)
+    {
         return new PositionResponse
         {
             Id = position.Id,
             Name = position.Name,
             Description = position.Description
         };
-
     }
+
+
 }
