@@ -1,6 +1,7 @@
 ﻿using WorkSphere.Application.DTOs.Department;
 using WorkSphere.Application.DTOs.Employees;
 using WorkSphere.Application.DTOs.Position;
+using WorkSphere.Application.Exceptions;
 using WorkSphere.Application.Interfaces;
 using WorkSphere.Domain.Entities;
 
@@ -103,12 +104,12 @@ public class EmployeeService : IEmployeeService
         var department = await _departmentRepository.GetByIdAsync(request.DepartmentId);
 
         if (department == null)
-            throw new Exception("Departamento no encontrado");
+            throw new NotFoundException("Departamento no encontrado");
 
         var position = await _positionRepository.GetByIdAsync(request.PositionId);
 
         if (position == null)
-            throw new Exception("Position no encontrada");
+            throw new NotFoundException("Position no encontrada");
 
 
         employee.FirstName = request.FirstName;
