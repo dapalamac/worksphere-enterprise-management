@@ -1,9 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using WorkSphere.Application.DTOs.Employees;
 using WorkSphere.Application.Interfaces;
 
+
 namespace WorkSphere.Api.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class EmployeesController : ControllerBase
@@ -14,6 +19,27 @@ public class EmployeesController : ControllerBase
     public EmployeesController(IEmployeeService employeeService)
     {
         _employeeService = employeeService;
+    }
+
+    [HttpGet("me")]
+    [Authorize]
+    public IActionResult Me()
+    {
+        var id = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+
+        var email = User.FindFirst(JwtRegisteredClaimNames.Email)?.Value;
+
+        var role = User.FindFirst(ClaimTypes.Role)?.Value;
+
+        var name = User.FindFirst(JwtRegisteredClaimNames.UniqueName)?.Value;
+
+        return Ok(new
+        {
+            Id = id,
+            Name = name,
+            Email = email,
+            Role = role
+        });
     }
 
 
@@ -55,8 +81,8 @@ public class EmployeesController : ControllerBase
     }
 
 
-
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(Guid id)
     {
         var deleted = await _employeeService.DeleteAsync(id);
@@ -66,6 +92,8 @@ public class EmployeesController : ControllerBase
 
         return NoContent();
     }
+
+
 
 
 }

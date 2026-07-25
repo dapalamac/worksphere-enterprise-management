@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using WorkSphere.Domain.Entities;
 
 
@@ -13,6 +10,8 @@ public class WorkSphereDbContext : DbContext
         : base(options)
     {
     }
+
+    public DbSet<User> Users { get; set; }
 
     public DbSet<Employee> Employees => Set<Employee>();
 
