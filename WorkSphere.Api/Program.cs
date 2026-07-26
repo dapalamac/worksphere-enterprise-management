@@ -11,6 +11,7 @@ using WorkSphere.Infrastructure;
 using WorkSphere.Infrastructure.Persistence;
 using WorkSphere.Infrastructure.Persistence.Seed;
 
+
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .WriteTo.File(

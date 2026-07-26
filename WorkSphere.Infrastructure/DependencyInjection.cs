@@ -8,6 +8,7 @@ using WorkSphere.Application.Services.Employees;
 using WorkSphere.Application.Services.Positions;
 using WorkSphere.Infrastructure.Persistence;
 using WorkSphere.Infrastructure.Persistence.Repositories;
+using WorkSphere.Infrastructure.Services;
 
 
 
@@ -23,6 +24,8 @@ public static class DependencyInjection
             options.UseSqlServer(
                 configuration.GetConnectionString("DefaultConnection")));
 
+
+
         services.AddScoped<IEmployeeRepository, EmployeeRepository>();
         services.AddScoped<IDepartmentRepository, DepartmentRepository>();
         services.AddScoped<IPositionRepository, PositionRepository>();
@@ -34,6 +37,10 @@ public static class DependencyInjection
         services.AddScoped<IPositionService, PositionService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IJwtService, JwtService>();
+
+        services.AddHttpContextAccessor();
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
+
 
         return services;
     }

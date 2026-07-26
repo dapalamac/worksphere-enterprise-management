@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WorkSphere.Application.Interfaces;
 using WorkSphere.Domain.Entities;
-using WorkSphere.Infrastructure.Persistence;
 
 namespace WorkSphere.Infrastructure.Persistence.Repositories;
 
@@ -48,5 +47,11 @@ public class EmployeeRepository : IEmployeeRepository
         await _context.SaveChangesAsync();
     }
 
-
+    public async Task<List<Employee>> GetPagedAsync(int page, int pageSize)
+    {
+        return await _context.Employees
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+    }
 }

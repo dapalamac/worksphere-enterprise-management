@@ -1,10 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace WorkSphere.Application.Interfaces;
 
-namespace WorkSphere.Application.Interfaces
+public interface ICurrentUserService
 {
-    internal class ICurrentUserService
-    {
-    }
+    Guid UserId { get; }
+
+    string Email { get; }
+
+    string Name { get; }
+
+    string Role { get; }
 }

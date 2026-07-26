@@ -1,10 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace WorkSphere.Application.DTOs.Auth;
 
-namespace WorkSphere.Application.Services.Auth
+public class CurrentUserResponse
 {
-    internal class CurrentUserResponse
-    {
-    }
+    public string Id { get; set; } = string.Empty;
+
+    public string Name { get; set; } = string.Empty;
+
+    public string Email { get; set; } = string.Empty;
+
+    public string Role { get; set; } = string.Empty;
 }

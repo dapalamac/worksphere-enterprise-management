@@ -6,6 +6,8 @@ public interface IEmployeeService
 {
     Task<List<EmployeeResponse>> GetAllAsync();
 
+    Task<List<EmployeeResponse>> GetPagedAsync(int page, int pageSize);
+
     Task<EmployeeResponse?> GetByIdAsync(Guid id);
 
     Task<EmployeeResponse?> CreateAsync(CreateEmployeeRequest request);

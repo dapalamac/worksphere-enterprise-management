@@ -169,4 +169,13 @@ public class EmployeeService : IEmployeeService
             Position = MapPosition(employee.Position)
         };
     }
+
+    public async Task<List<EmployeeResponse>> GetPagedAsync(int page, int pageSize)
+    {
+        var employees = await _employeeRepository.GetPagedAsync(page, pageSize);
+
+        var response = employees.Select(MapToResponse).ToList();
+
+        return response;
+    }
 }

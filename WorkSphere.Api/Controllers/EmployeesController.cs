@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
+using WorkSphere.Application.DTOs.Auth;
 using WorkSphere.Application.DTOs.Employees;
 using WorkSphere.Application.Interfaces;
 
@@ -15,40 +14,37 @@ public class EmployeesController : ControllerBase
 
 {
     private readonly IEmployeeService _employeeService;
+    private readonly ICurrentUserService _currentUser;
 
-    public EmployeesController(IEmployeeService employeeService)
+    public EmployeesController(
+    IEmployeeService employeeService,
+    ICurrentUserService currentUser)
     {
         _employeeService = employeeService;
+        _currentUser = currentUser;
     }
 
     [HttpGet("me")]
     [Authorize]
     public IActionResult Me()
     {
-        var id = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-
-        var email = User.FindFirst(JwtRegisteredClaimNames.Email)?.Value;
-
-        var role = User.FindFirst(ClaimTypes.Role)?.Value;
-
-        var name = User.FindFirst(JwtRegisteredClaimNames.UniqueName)?.Value;
-
-        return Ok(new
+        return Ok(new CurrentUserResponse
         {
-            Id = id,
-            Name = name,
-            Email = email,
-            Role = role
+            Id = _currentUser.UserId.ToString(),
+            Name = _currentUser.Name,
+            Email = _currentUser.Email,
+            Role = _currentUser.Role
         });
     }
 
-
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(
+    [FromQuery] int page = 1,
+    [FromQuery] int pageSize = 10)
     {
-        var response = await _employeeService.GetAllAsync();
+        var employees = await _employeeService.GetPagedAsync(page, pageSize);
 
-        return Ok(response);
+        return Ok(employees);
     }
 
     [HttpGet("{id}")]
