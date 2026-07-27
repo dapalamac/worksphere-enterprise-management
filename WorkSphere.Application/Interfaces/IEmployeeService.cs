@@ -7,7 +7,7 @@ public interface IEmployeeService
 {
     Task<List<EmployeeResponse>> GetAllAsync();
 
-    Task<ApiResponse<PagedResult<EmployeeResponse>>> GetPagedAsync(int page, int pageSize);
+    Task<ApiResponse<PagedResult<EmployeeResponse>>> GetPagedAsync(int page, int pageSize, string? search, Guid? departmentId, Guid? positionId);
 
     Task<EmployeeResponse?> GetByIdAsync(Guid id);
 

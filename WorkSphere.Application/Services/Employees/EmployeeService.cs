@@ -131,9 +131,9 @@ public class EmployeeService : IEmployeeService
 
     }
 
-    public async Task<ApiResponse<PagedResult<EmployeeResponse>>> GetPagedAsync(int page, int pageSize)
+    public async Task<ApiResponse<PagedResult<EmployeeResponse>>> GetPagedAsync(int page, int pageSize, string? search, Guid? departmentId, Guid? positionId)
     {
-        var employees = await _employeeRepository.GetPagedAsync(page, pageSize);
+        var employees = await _employeeRepository.GetPagedAsync(page, pageSize, search, departmentId, positionId);
 
         var employeeResponses = employees.Items
             .Select(MapToResponse)

@@ -39,11 +39,14 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<ApiResponse<List<EmployeeResponse>>>> GetAll(
+    public async Task<ActionResult<ApiResponse<PagedResult<EmployeeResponse>>>> GetAll(
     [FromQuery] int page = 1,
-    [FromQuery] int pageSize = 10)
+    [FromQuery] int pageSize = 10,
+    [FromQuery] string? search = null,
+    [FromQuery] Guid? departmentId = null,
+    [FromQuery] Guid? positionId = null)
     {
-        var employees = await _employeeService.GetPagedAsync(page, pageSize);
+        var employees = await _employeeService.GetPagedAsync(page, pageSize, search, departmentId, positionId);
 
         return Ok(employees);
     }
