@@ -50,8 +50,10 @@ public class EmployeeRepository : IEmployeeRepository
     public async Task<List<Employee>> GetPagedAsync(int page, int pageSize)
     {
         return await _context.Employees
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
+         .Include(e => e.Department)
+         .Include(e => e.Position)
+         .Skip((page - 1) * pageSize)
+         .Take(pageSize)
+         .ToListAsync();
     }
 }

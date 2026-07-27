@@ -164,9 +164,13 @@ public class EmployeeService : IEmployeeService
             Salary = employee.Salary,
 
 
-            Department = MapDepartment(employee.Department),
+            Department = employee.Department is null
+                ? null
+                : MapDepartment(employee.Department),
 
-            Position = MapPosition(employee.Position)
+            Position = employee.Department is null
+                ? null
+                : MapPosition(employee.Position)
         };
     }
 
