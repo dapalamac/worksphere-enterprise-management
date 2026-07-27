@@ -1,4 +1,5 @@
 ﻿using WorkSphere.Application.Common;
+using WorkSphere.Application.DTOs.Employees;
 using WorkSphere.Domain.Entities;
 
 namespace WorkSphere.Application.Interfaces;
@@ -7,12 +8,7 @@ public interface IEmployeeRepository
 {
     Task<List<Employee>> GetAllAsync();
 
-    Task<PagedData<Employee>> GetPagedAsync(
-    int page,
-    int pageSize,
-    string? search,
-    Guid? departmentId,
-    Guid? positionId);
+    Task<PagedData<Employee>> GetPagedAsync(EmployeeFilter filter);
 
     Task<Employee?> GetByIdAsync(Guid id);
 

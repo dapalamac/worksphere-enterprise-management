@@ -16,6 +16,6 @@ public class EmployeeFilter
 
     public string? SortBy { get; set; }
 
-    public SortDirection? SortDirection { get; set; }
+    public SortDirection SortDirection { get; set; } = SortDirection.Asc;
 
 }

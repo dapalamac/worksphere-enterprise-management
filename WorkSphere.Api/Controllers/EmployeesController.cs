@@ -39,14 +39,9 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<ApiResponse<PagedResult<EmployeeResponse>>>> GetAll(
-    [FromQuery] int page = 1,
-    [FromQuery] int pageSize = 10,
-    [FromQuery] string? search = null,
-    [FromQuery] Guid? departmentId = null,
-    [FromQuery] Guid? positionId = null)
+    public async Task<ActionResult<ApiResponse<PagedResult<EmployeeResponse>>>> GetAll([FromQuery] EmployeeFilter filter)
     {
-        var employees = await _employeeService.GetPagedAsync(page, pageSize, search, departmentId, positionId);
+        var employees = await _employeeService.GetPagedAsync(filter);
 
         return Ok(employees);
     }

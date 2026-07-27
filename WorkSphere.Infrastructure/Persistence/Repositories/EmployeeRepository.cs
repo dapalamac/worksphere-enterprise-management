@@ -77,7 +77,7 @@ public class EmployeeRepository : IEmployeeRepository
         if (filter.SortBy == "FirstName")
         {
 
-            if (filter.SortDirection == SortDirection.asc)
+            if (filter.SortDirection == SortDirection.Asc)
             {
                 query = query.OrderBy(e => e.FirstName);
             }
@@ -89,7 +89,7 @@ public class EmployeeRepository : IEmployeeRepository
 
         else if (filter.SortBy == "LastName")
         {
-            if (filter.SortDirection == SortDirection.asc)
+            if (filter.SortDirection == SortDirection.Asc)
             {
                 query = query.OrderBy(e => e.LastName);
             }
@@ -101,7 +101,7 @@ public class EmployeeRepository : IEmployeeRepository
 
         else if (filter.SortBy == "CreatedAt")
         {
-            if (filter.SortDirection == SortDirection.asc)
+            if (filter.SortDirection == SortDirection.Asc)
             {
                 query = query.OrderBy(e => e.CreatedAt);
             }

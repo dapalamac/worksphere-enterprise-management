@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Text;
+using System.Text.Json.Serialization;
 using WorkSphere.Api.Middlewares;
 using WorkSphere.Application.Configuration;
 using WorkSphere.Application.Validators.Employees;
@@ -46,7 +47,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Host.UseSerilog();
 
-builder.Services.AddControllers();
+//Visualizar SortBy Desc, Asc
+builder.Services.AddControllers().AddJsonOptions(option =>
+{
+    option.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 
 builder.Services.AddFluentValidationAutoValidation();
 

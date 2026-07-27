@@ -131,24 +131,24 @@ public class EmployeeService : IEmployeeService
 
     }
 
-    public async Task<ApiResponse<PagedResult<EmployeeResponse>>> GetPagedAsync(int page, int pageSize, string? search, Guid? departmentId, Guid? positionId)
+    public async Task<ApiResponse<PagedResult<EmployeeResponse>>> GetPagedAsync(EmployeeFilter filter)
     {
-        var employees = await _employeeRepository.GetPagedAsync(page, pageSize, search, departmentId, positionId);
+        var employees = await _employeeRepository.GetPagedAsync(filter);
 
         var employeeResponses = employees.Items
             .Select(MapToResponse)
             .ToList();
 
         var totalPages = (int)Math.Ceiling(
-            (double)employees.TotalRecords / pageSize);
+            (double)employees.TotalRecords / filter.PageSize);
 
         var pagedResult = new PagedResult<EmployeeResponse>
         {
             Items = employeeResponses,
             Pagination = new PaginationMetadata
             {
-                Page = page,
-                PageSize = pageSize,
+                Page = filter.Page,
+                PageSize = filter.PageSize,
                 TotalRecords = employees.TotalRecords,
                 TotalPages = totalPages
             }
