@@ -1,4 +1,5 @@
-﻿using WorkSphere.Application.DTOs.Employees;
+﻿using WorkSphere.Application.Common;
+using WorkSphere.Application.DTOs.Employees;
 
 namespace WorkSphere.Application.Interfaces;
 
@@ -6,7 +7,7 @@ public interface IEmployeeService
 {
     Task<List<EmployeeResponse>> GetAllAsync();
 
-    Task<List<EmployeeResponse>> GetPagedAsync(int page, int pageSize);
+    Task<ApiResponse<PagedResult<EmployeeResponse>>> GetPagedAsync(int page, int pageSize);
 
     Task<EmployeeResponse?> GetByIdAsync(Guid id);
 

@@ -1,4 +1,5 @@
-﻿using WorkSphere.Application.DTOs.Department;
+﻿using WorkSphere.Application.Common;
+using WorkSphere.Application.DTOs.Department;
 using WorkSphere.Application.DTOs.Employees;
 using WorkSphere.Application.DTOs.Position;
 using WorkSphere.Application.Exceptions;
@@ -130,6 +131,42 @@ public class EmployeeService : IEmployeeService
 
     }
 
+    public async Task<ApiResponse<PagedResult<EmployeeResponse>>> GetPagedAsync(int page, int pageSize)
+    {
+        var employees = await _employeeRepository.GetPagedAsync(page, pageSize);
+
+        var employeeResponses = employees.Items
+            .Select(MapToResponse)
+            .ToList();
+
+        var totalPages = (int)Math.Ceiling(
+            (double)employees.TotalRecords / pageSize);
+
+        var pagedResult = new PagedResult<EmployeeResponse>
+        {
+            Items = employeeResponses,
+            Pagination = new PaginationMetadata
+            {
+                Page = page,
+                PageSize = pageSize,
+                TotalRecords = employees.TotalRecords,
+                TotalPages = totalPages
+            }
+        };
+
+        return new ApiResponse<PagedResult<EmployeeResponse>>
+        {
+            Success = true,
+            Message = "Employees retrieved successfully.",
+            Data = pagedResult
+        };
+
+
+    }
+
+
+    //FUNCTIONS FOR TASK
+
     private static DepartmentResponse MapDepartment(Department department)
     {
         return new DepartmentResponse
@@ -172,14 +209,5 @@ public class EmployeeService : IEmployeeService
                 ? null
                 : MapPosition(employee.Position)
         };
-    }
-
-    public async Task<List<EmployeeResponse>> GetPagedAsync(int page, int pageSize)
-    {
-        var employees = await _employeeRepository.GetPagedAsync(page, pageSize);
-
-        var response = employees.Select(MapToResponse).ToList();
-
-        return response;
     }
 }

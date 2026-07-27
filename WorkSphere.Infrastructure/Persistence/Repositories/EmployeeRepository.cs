@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WorkSphere.Application.Common;
 using WorkSphere.Application.Interfaces;
 using WorkSphere.Domain.Entities;
 
@@ -47,13 +48,24 @@ public class EmployeeRepository : IEmployeeRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<List<Employee>> GetPagedAsync(int page, int pageSize)
+    public async Task<PagedData<Employee>> GetPagedAsync(int page, int pageSize)
     {
-        return await _context.Employees
-         .Include(e => e.Department)
-         .Include(e => e.Position)
-         .Skip((page - 1) * pageSize)
-         .Take(pageSize)
-         .ToListAsync();
+
+        var totalRecords = await _context.Employees.CountAsync();
+
+        var employees = await _context.Employees
+            .Include(e => e.Department)
+            .Include(e => e.Position)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return new PagedData<Employee>
+        {
+            Items = employees,
+            TotalRecords = totalRecords
+        };
+
+
     }
 }

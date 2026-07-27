@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WorkSphere.Application.Common;
 using WorkSphere.Application.DTOs.Auth;
 using WorkSphere.Application.DTOs.Employees;
 using WorkSphere.Application.Interfaces;
@@ -38,7 +39,7 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll(
+    public async Task<ActionResult<ApiResponse<List<EmployeeResponse>>>> GetAll(
     [FromQuery] int page = 1,
     [FromQuery] int pageSize = 10)
     {
