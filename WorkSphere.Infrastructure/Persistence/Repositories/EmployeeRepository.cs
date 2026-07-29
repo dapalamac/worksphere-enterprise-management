@@ -19,6 +19,7 @@ public class EmployeeRepository : IEmployeeRepository
     public async Task<List<Employee>> GetAllAsync()
     {
         return await _context.Employees
+            .AsNoTracking()
             .Include(e => e.Department)
             .Include(e => e.Position)
             .ToListAsync();
@@ -27,6 +28,7 @@ public class EmployeeRepository : IEmployeeRepository
     public async Task<Employee?> GetByIdAsync(Guid id)
     {
         return await _context.Employees
+            .AsNoTracking()
             .Include(e => e.Department)
             .Include(e => e.Position)
             .FirstOrDefaultAsync(e => e.Id == id);
@@ -54,6 +56,7 @@ public class EmployeeRepository : IEmployeeRepository
     {
 
         var query = _context.Employees
+            .AsNoTracking()
             .Include(e => e.Department)
             .Include(e => e.Position)
             .AsQueryable();
@@ -115,6 +118,7 @@ public class EmployeeRepository : IEmployeeRepository
 
 
         var employees = await query
+            .AsNoTracking()
             .Skip((filter.Page - 1) * filter.PageSize)
             .Take(filter.PageSize)
             .ToListAsync();
