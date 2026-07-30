@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Caching.Distributed;
-using System.Text.Json;
-using WorkSphere.Application.DTOs.Department;
+﻿using WorkSphere.Application.DTOs.Department;
 using WorkSphere.Application.Interfaces;
 using WorkSphere.Domain.Entities;
 
@@ -11,9 +9,9 @@ public class DepartmentService : IDepartmentService
 {
 
     private readonly IDepartmentRepository _departmentRepository;
-    private readonly IDistributedCache _cache;
+    private readonly ICacheService _cache;
 
-    public DepartmentService(IDepartmentRepository departmentRepository, IDistributedCache cache)
+    public DepartmentService(IDepartmentRepository departmentRepository, ICacheService cache)
     {
         _departmentRepository = departmentRepository;
         _cache = cache;
@@ -50,32 +48,17 @@ public class DepartmentService : IDepartmentService
 
     public async Task<List<DepartmentResponse>> GetAllAsync()
     {
-        var cachedDepartments = await _cache.GetStringAsync("departments");
+        var cachedDepartments = await _cache.GetAsync<List<DepartmentResponse>>("departments");
 
-        if (!string.IsNullOrEmpty(cachedDepartments))
-        {
-            // Deserialize the cached departments list from Redis
-            var cachedDepartmentsList =
-                JsonSerializer.Deserialize<List<DepartmentResponse>>(cachedDepartments);
-
-            if (cachedDepartmentsList != null)
-                return cachedDepartmentsList;
-        }
+        if (cachedDepartments != null)
+            return cachedDepartments;
 
         var departments = await _departmentRepository.GetAllAsync();
 
         var response = departments.Select(MapToResponse).ToList();
 
         // Cache the departments list in Redis for 10 minutes
-        var departmentsSerialize = JsonSerializer.Serialize<List<DepartmentResponse>>(response);
-
-        var options = new DistributedCacheEntryOptions
-        {
-            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
-        };
-
-        // Store the serialized departments list in Redis cache
-        await _cache.SetStringAsync("departments", departmentsSerialize, options);
+        await _cache.SetAsync("departments", response);
 
         return response;
 

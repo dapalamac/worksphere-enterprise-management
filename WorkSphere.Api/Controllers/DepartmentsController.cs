@@ -1,11 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Hangfire;
+using Microsoft.AspNetCore.Mvc;
 using WorkSphere.Application.DTOs.Department;
-using WorkSphere.Application.DTOs.Employees;
-using WorkSphere.Application.DTOs.Position;
 using WorkSphere.Application.Interfaces;
-using WorkSphere.Application.Services.Departments;
-using WorkSphere.Domain.Entities;
-using WorkSphere.Infrastructure.Persistence.Repositories;
 
 namespace WorkSphere.Api.Controllers;
 
@@ -22,11 +18,31 @@ public class DepartmentController : ControllerBase
         _departmentService = departmentService;
     }
 
+    [HttpPost("test-job")]
+    public IActionResult TestJob()
+    {
+        // Agregar un trabajo en segundo plano usando Hangfire
+        BackgroundJob.Enqueue<INotificationService>(
+            service => service.SendWelcomeEmail(1));
+
+        return Ok("Job agregado correctamente.");
+    }
+
+    //[HttpPost("test-delayed-job")]
+    //public IActionResult TestDelayedJob()
+    //{
+    //    BackgroundJob.Schedule<INotificationService>(
+    //        service => service.SendWelcomeEmail(1),
+    //        TimeSpan.FromMinutes(1));
+
+    //    return Ok("Job programado correctamente.");
+    //}
+
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
         var response = await _departmentService.GetAllAsync();
- 
+
         return Ok(response);
     }
 
@@ -74,7 +90,7 @@ public class DepartmentController : ControllerBase
         return NoContent();
     }
 
-    
+
 
 
 }

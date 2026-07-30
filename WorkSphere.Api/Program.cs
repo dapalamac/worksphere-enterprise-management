@@ -1,5 +1,6 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -116,6 +117,12 @@ app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+// Hangfire Dashboard
+app.UseHangfireDashboard();
+
+// Register recurring jobs
+//HangfireJobs.RegisterRecurringJobs();
 
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
