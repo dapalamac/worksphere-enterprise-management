@@ -13,16 +13,19 @@ public class EmployeeService : IEmployeeService
     private readonly IEmployeeRepository _employeeRepository;
     private readonly IDepartmentRepository _departmentRepository;
     private readonly IPositionRepository _positionRepository;
+    private readonly IBackgroundJobService _backgroundJobService;
 
 
     public EmployeeService(
     IEmployeeRepository employeeRepository,
     IDepartmentRepository departmentRepository,
-    IPositionRepository positionRepository)
+    IPositionRepository positionRepository,
+    IBackgroundJobService backgroundJobService)
     {
         _employeeRepository = employeeRepository;
         _departmentRepository = departmentRepository;
         _positionRepository = positionRepository;
+        _backgroundJobService = backgroundJobService;
     }
 
 
@@ -59,6 +62,9 @@ public class EmployeeService : IEmployeeService
 
         await _employeeRepository.AddAsync(employee);
 
+        _backgroundJobService.Enqueue<INotificationService>(
+            x => x.SendWelcomeEmail(employee.Id));
+
         return MapToResponse(employee);
 
     }
@@ -90,6 +96,9 @@ public class EmployeeService : IEmployeeService
 
         if (employee == null)
             return null;
+
+        _backgroundJobService.EnqueueEmail<INotificationService>(
+           x => x.SendWelcomeEmail(employee.Id));
 
         return MapToResponse(employee);
 

@@ -1,9 +1,8 @@
 ﻿using Hangfire;
-using WorkSphere.Application.Interfaces;
 
 namespace WorkSphere.Infrastructure.BackgroundJobs;
 
-public static class HangfireJobs
+public static class HangfireRecurringJobs
 {
     public static void RegisterRecurringJobs()
     {
@@ -11,14 +10,17 @@ public static class HangfireJobs
         RegisterCleanupJob();
     }
 
+    [Queue("reports")]
     private static void RegisterDailyEmail()
     {
-        RecurringJob.AddOrUpdate<INotificationService>(
-            "daily-email",
-            service => service.SendWelcomeEmail(1),
-            Cron.Minutely);
+        //RecurringJob.AddOrUpdate<INotificationService>(
+        //    "daily-email",
+        //    service => service.SendWelcomeEmail(""),
+        //    Cron.Minutely);
     }
 
+
+    [Queue("emails")]
     private static void RegisterCleanupJob()
     {
         // Aquí registraríamos otro Job

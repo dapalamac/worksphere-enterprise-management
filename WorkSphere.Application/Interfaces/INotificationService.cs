@@ -2,5 +2,5 @@
 
 public interface INotificationService
 {
-    Task SendWelcomeEmail(int employeeId);
+    Task SendWelcomeEmail(Guid employeeId);
 }

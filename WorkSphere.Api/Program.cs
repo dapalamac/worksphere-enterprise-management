@@ -121,8 +121,9 @@ app.UseAuthorization();
 // Hangfire Dashboard
 app.UseHangfireDashboard();
 
+
 // Register recurring jobs
-//HangfireJobs.RegisterRecurringJobs();
+//HangfireRecurringJobs.RegisterRecurringJobs();
 
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())

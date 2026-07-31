@@ -8,6 +8,7 @@ using WorkSphere.Application.Services.Departments;
 using WorkSphere.Application.Services.Employees;
 using WorkSphere.Application.Services.NotificationService;
 using WorkSphere.Application.Services.Positions;
+using WorkSphere.Infrastructure.BackgroundJobs;
 using WorkSphere.Infrastructure.Persistence;
 using WorkSphere.Infrastructure.Persistence.Repositories;
 using WorkSphere.Infrastructure.Services;
@@ -34,14 +35,29 @@ public static class DependencyInjection
             options.InstanceName = "WorkSphere:";
         });
 
-        // Add Hangfire Sql Server storage
-        services.AddHangfire(config =>
+
+        services.AddSingleton<JobLoggingFilter>();
+
+        services.AddHangfire((provider, config) =>
         {
-            config.UseSqlServerStorage(
-                configuration.GetConnectionString("DefaultConnection"));
+            config
+                .UseSqlServerStorage(
+                    configuration.GetConnectionString("DefaultConnection"))
+                .UseFilter(
+                    provider.GetRequiredService<JobLoggingFilter>());
         });
+
         // Add Hangfire server
-        services.AddHangfireServer();
+        services.AddHangfireServer(options =>
+        {
+            options.Queues = new[]
+            {
+                "default",
+                "critical",
+                "emails",
+                "reports"
+            };
+        });
 
         services.AddScoped<IEmployeeRepository, EmployeeRepository>();
         services.AddScoped<IDepartmentRepository, DepartmentRepository>();
@@ -62,6 +78,9 @@ public static class DependencyInjection
         services.AddScoped<ICacheService, CacheService>();
         // Add NotificationService
         services.AddScoped<INotificationService, NotificationService>();
+
+        services.AddScoped<IBackgroundJobService, HangfireBackgroundJobService>();
+
 
 
         return services;

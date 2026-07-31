@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using WorkSphere.Application.Interfaces;
 
+
 namespace WorkSphere.Application.Services.NotificationService;
 
 public class NotificationService : INotificationService
@@ -13,24 +14,18 @@ public class NotificationService : INotificationService
         _logger = logger;
     }
 
-    public async Task SendWelcomeEmail(int employeeId)
+    public async Task SendWelcomeEmail(Guid employeeId)
     {
-
-        try
-        {
-            _logger.LogInformation(
+        _logger.LogInformation(
             "Iniciando envío de correo para el empleado {EmployeeId}",
             employeeId);
 
-            await Task.Delay(5000);
+        await Task.Delay(5000);
 
-            throw new Exception("Error simulado");
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error enviando correo");
+        _logger.LogInformation(
+          "Correo enviado correctamente al empleado {EmployeeId}",
+          employeeId);
 
-            throw;
-        }
+        //throw new Exception("Error simulado");
     }
 }

@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 
-namespace WorkSphere.Application.Interfaces
+namespace WorkSphere.Application.Interfaces;
+
+public interface IBackgroundJobService
 {
-    internal class IBackgroundJobService
-    {
-    }
+    string EnqueueEmail<T>(
+        Expression<Func<T, Task>> methodCall);
+
+    string EnqueueCritical<T>(
+        Expression<Func<T, Task>> methodCall);
+
+    string EnqueueReport<T>(
+        Expression<Func<T, Task>> methodCall);
 }

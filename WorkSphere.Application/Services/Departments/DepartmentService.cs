@@ -11,10 +11,12 @@ public class DepartmentService : IDepartmentService
     private readonly IDepartmentRepository _departmentRepository;
     private readonly ICacheService _cache;
 
+
     public DepartmentService(IDepartmentRepository departmentRepository, ICacheService cache)
     {
         _departmentRepository = departmentRepository;
         _cache = cache;
+
     }
 
     public async Task<DepartmentResponse> CreateAsync(CreateDepartmentRequest request)

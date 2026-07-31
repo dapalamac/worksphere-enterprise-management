@@ -1,5 +1,4 @@
-﻿using Hangfire;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using WorkSphere.Application.DTOs.Department;
 using WorkSphere.Application.Interfaces;
 
@@ -12,26 +11,27 @@ public class DepartmentController : ControllerBase
 {
 
     private readonly IDepartmentService _departmentService;
+    //private readonly IBackgroundJobService _backgroundJobService;
 
     public DepartmentController(IDepartmentService departmentService)
     {
         _departmentService = departmentService;
     }
 
-    [HttpPost("test-job")]
-    public IActionResult TestJob()
-    {
-        // Agregar un trabajo en segundo plano usando Hangfire
-        BackgroundJob.Enqueue<INotificationService>(
-            service => service.SendWelcomeEmail(1));
+    //[HttpPost("test-job")]
+    //public IActionResult TestJob()
+    //{
+    //    // Agregar un trabajo en segundo plano usando Hangfire
+    //    _backgroundJobService.Enqueue<INotificationService>(
+    //        service => service.SendWelcomeEmail(1));
 
-        return Ok("Job agregado correctamente.");
-    }
+    //    return Ok("Job agregado correctamente.");
+    //}
 
     //[HttpPost("test-delayed-job")]
     //public IActionResult TestDelayedJob()
     //{
-    //    BackgroundJob.Schedule<INotificationService>(
+    //    _backgroundJobService.Schedule<INotificationService>(
     //        service => service.SendWelcomeEmail(1),
     //        TimeSpan.FromMinutes(1));
 
