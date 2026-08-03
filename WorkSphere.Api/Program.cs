@@ -114,14 +114,6 @@ using (var scope = app.Services.CreateScope())
 
 app.UseMiddleware<ExceptionMiddleware>();
 
-app.UseAuthentication();
-
-app.UseAuthorization();
-
-// Hangfire Dashboard
-app.UseHangfireDashboard();
-
-
 // Register recurring jobs
 //HangfireRecurringJobs.RegisterRecurringJobs();
 
@@ -130,14 +122,21 @@ app.UseHangfireDashboard();
 //{
 //    app.MapOpenApi();
 //}
-
-app.UseHttpsRedirection();
-
-app.MapControllers();
-
 app.UseSwagger();
 
 app.UseSwaggerUI();
+
+app.UseHttpsRedirection();
+
+app.UseAuthentication();
+
+app.UseAuthorization();
+
+// Hangfire Dashboard
+app.UseHangfireDashboard();
+
+app.MapControllers();
+
 
 app.Run();
 

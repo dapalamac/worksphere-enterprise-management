@@ -62,7 +62,7 @@ public class EmployeeService : IEmployeeService
 
         await _employeeRepository.AddAsync(employee);
 
-        _backgroundJobService.Enqueue<INotificationService>(
+        _backgroundJobService.EnqueueEmail<INotificationService>(
             x => x.SendWelcomeEmail(employee.Id));
 
         return MapToResponse(employee);
@@ -96,9 +96,6 @@ public class EmployeeService : IEmployeeService
 
         if (employee == null)
             return null;
-
-        _backgroundJobService.EnqueueEmail<INotificationService>(
-           x => x.SendWelcomeEmail(employee.Id));
 
         return MapToResponse(employee);
 
