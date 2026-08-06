@@ -2,9 +2,12 @@ name: Backend CD
 
 on:
   workflow_run:
-    workflows: ["WorkSphere Backend CI"]
+    workflows:
+      - "WorkSphere Backend CI"
     types:
       - completed
+
+  workflow_dispatch:
 
 permissions:
   contents: read
