@@ -14,13 +14,15 @@ using WorkSphere.Infrastructure;
 using WorkSphere.Infrastructure.Persistence;
 using WorkSphere.Infrastructure.Persistence.Seed;
 
-
+//Configura Serilog
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .WriteTo.File(
         "Logs/log-.txt",
         rollingInterval: RollingInterval.Day)
     .CreateLogger();
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
