@@ -1,6 +1,8 @@
 name: WorkSphere Backend CI
 
 on:
+  workflow_dispatch:
+
   push:
     branches:
       - master
