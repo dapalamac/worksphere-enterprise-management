@@ -1,5 +1,4 @@
-﻿using Hangfire;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WorkSphere.Application.Interfaces;
@@ -38,26 +37,26 @@ public static class DependencyInjection
 
         services.AddSingleton<JobLoggingFilter>();
 
-        services.AddHangfire((provider, config) =>
-        {
-            config
-                .UseSqlServerStorage(
-                    configuration.GetConnectionString("DefaultConnection"))
-                .UseFilter(
-                    provider.GetRequiredService<JobLoggingFilter>());
-        });
+        //services.AddHangfire((provider, config) =>
+        //{
+        //    config
+        //        .UseSqlServerStorage(
+        //            configuration.GetConnectionString("DefaultConnection"))
+        //        .UseFilter(
+        //            provider.GetRequiredService<JobLoggingFilter>());
+        //});
 
         // Add Hangfire server
-        services.AddHangfireServer(options =>
-        {
-            options.Queues = new[]
-            {
-                "default",
-                "critical",
-                "emails",
-                "reports"
-            };
-        });
+        //services.AddHangfireServer(options =>
+        //{
+        //    options.Queues = new[]
+        //    {
+        //        "default",
+        //        "critical",
+        //        "emails",
+        //        "reports"
+        //    };
+        //});
 
         services.AddScoped<IEmployeeRepository, EmployeeRepository>();
         services.AddScoped<IDepartmentRepository, DepartmentRepository>();

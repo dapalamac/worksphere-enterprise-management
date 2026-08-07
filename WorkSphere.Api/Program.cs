@@ -1,6 +1,5 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -104,11 +103,27 @@ builder.Services.AddSwaggerGen(options =>
 var app = builder.Build();
 
 
-using (var scope = app.Services.CreateScope())
+//using (var scope = app.Services.CreateScope())
+//{
+//    var context = scope.ServiceProvider.GetRequiredService<WorkSphereDbContext>();
+
+//    await DbInitializer.SeedAsync(context);
+//}
+
+try
 {
+    using var scope = app.Services.CreateScope();
+
     var context = scope.ServiceProvider.GetRequiredService<WorkSphereDbContext>();
 
     await DbInitializer.SeedAsync(context);
+
+    Console.WriteLine("Seed ejecutado correctamente.");
+}
+catch (Exception ex)
+{
+    Console.WriteLine("ERROR EN SEED:");
+    Console.WriteLine(ex.ToString());
 }
 
 
@@ -135,7 +150,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // Hangfire Dashboard
-app.UseHangfireDashboard();
+//app.UseHangfireDashboard();
 
 app.MapControllers();
 
