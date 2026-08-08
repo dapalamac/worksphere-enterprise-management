@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="WorkSphere.Api/WorkSphere.Api.csproj" />
+    <Project Path="WorkSphere.Application/WorkSphere.Application.csproj" />
+    <Project Path="WorkSphere.Domain/WorkSphere.Domain.csproj" />
+    <Project Path="WorkSphere.Infrastructure/WorkSphere.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="WorkSphere.Tests/WorkSphere.Tests.csproj" />
+  </Folder>
+</Solution>
