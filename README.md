@@ -1,29 +1,47 @@
-# WorkSphere Enterprise Management
+# WorkSphere
 
-Enterprise Employee Management System developed with ASP.NET Core 10 following Clean Architecture principles.
+Sistema de gestión de empleados desarrollado como aplicación full-stack,
+con backend en ASP.NET Core y frontend en React + TypeScript.
 
-## Technologies
+## Tecnologías
 
-- ASP.NET Core 10
+### Backend
+- ASP.NET Core 8
 - Entity Framework Core
 - SQL Server
-- Swagger
+- JWT Authentication
+- BCrypt
+- Hangfire
 - Repository Pattern
 - Dependency Injection
-- DTO Pattern
+- Clean Architecture
 
-## Features
+### Frontend
+- React
+- TypeScript
+- Vite
+- Context API
+- CSS
 
-- Employee CRUD
-- Department CRUD
-- Position CRUD
-- Relationship validation
-- REST API
-- Swagger documentation
+### Testing
+- xUnit
+- Unit Testing
 
-## Architecture
+## Estructura del proyecto
 
-- WorkSphere.Api
-- WorkSphere.Application
-- WorkSphere.Domain
-- WorkSphere.Infrastructure
+```text
+WorkSphere/
+├── backend/
+│   ├── WorkSphere.Api/
+│   ├── WorkSphere.Application/
+│   ├── WorkSphere.Domain/
+│   ├── WorkSphere.Infrastructure/
+│   ├── WorkSphere.Tests/
+│   └── WorkSphere.sln
+│
+├── frontend/
+│   └── worksphere-frontend/
+│
+├── .github/
+├── .gitignore
+└── README.md
